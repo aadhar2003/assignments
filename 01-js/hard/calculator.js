@@ -16,6 +16,55 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+
+  constructor(){
+    this.res=0;
+  }
+  add(num){
+    
+    this.res+=num;
+  }
+  sub(num){
+    this.res-=num;
+  }
+  multiply(num){
+    this.res*=num;
+  }
+  divide(num){
+    if(num==0){
+      throw "Error"
+    }
+    this.res/=num;
+  }
+  clear(){
+    this.res=0;
+  }
+  getResult(){
+    return this.res;
+  }
+  calculate(expression){
+    let arr=expression.replaceAll(" ","").split("");
+    let res=0;
+    for(let i=0;i<arr.length;i++){
+      if(arr[i]=="+"){
+        res+=parseInt(arr[i+1]);
+      }
+      else if(arr[i]=="-"){
+        res-=parseInt(arr[i+1]);
+      }
+      else if(arr[i]=="*"){
+        res*=parseInt(arr[i+1]);
+      }
+      else if(arr[i]=="/"){
+        res/=parseInt(arr[i+1]);
+      }
+    }
+    this.res=res;
+  }
+
+
+
+}
 
 module.exports = Calculator;
