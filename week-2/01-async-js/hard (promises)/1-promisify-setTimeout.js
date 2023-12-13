@@ -13,3 +13,6 @@ function wait(n) {
 }
 wait(3).then(()=>console.log("3 seconds have passed!"));
 console.log("This should be printed before the above message.");
+
+
+module.exports = wait;
