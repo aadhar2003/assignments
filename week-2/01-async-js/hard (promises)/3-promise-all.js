@@ -8,7 +8,7 @@ function wait1(t) {
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
             resolve();
-        },1000)
+        },t*1000)
     })
 
 }
@@ -17,7 +17,7 @@ function wait2(t) {
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
             resolve();
-        },2000)
+        },t*1000)
     })
 }
 
@@ -25,16 +25,14 @@ function wait3(t) {
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
             resolve();
-        },3000)
+        },t*1000)
     })
 }
 
 function calculateTime(t1, t2, t3) {
     let start=Date.now();
-    Promise.all([waitOneSecond(),waitTwoSecond(),waitThreeSecond()]).then(()=>{
-        console.log(Date.now()-start);
+     return Promise.all([wait1(t1),wait2(t2),wait3(t3)]).then(()=>{
+        return  Date.now() - start;
     })
 }
-calculateTime();
-
 module.exports = calculateTime;

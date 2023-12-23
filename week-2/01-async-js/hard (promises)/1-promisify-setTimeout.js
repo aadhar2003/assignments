@@ -11,8 +11,7 @@ function wait(n) {
         },n*1000)
     })
 }
-wait(3).then(()=>console.log("3 seconds have passed!"));
-console.log("This should be printed before the above message.");
+
 
 
 module.exports = wait;

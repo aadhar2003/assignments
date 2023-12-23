@@ -39,11 +39,98 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require("express");
+const bodyParser = require("body-parser");
+const Port = 4000;
+const app = express();
+const fs = require("fs");
+
+app.use(bodyParser.json());
+
+//create todos
+app.post("/todos", (req, res) => {
+  try {
+    const raw = fs.readFileSync("todos.json");
+    const exist = JSON.parse(raw);
+    const data = req.body;
+    exist.push(data);
+    fs.writeFileSync("todos.json", JSON.stringify(exist));
+    res.status(200).send("data added successfully");
+  } catch (err) {
+    res.status(401);
+    console.log(err);
+  }
+});
+app.get("/get-all", (req, res) => {
+  try {
+    const raw = fs.readFileSync("todos.json");
+    const exist = JSON.parse(raw);
+
+    res.status(200).send(exist);
+  } catch (err) {
+    res.status(500).console.log(`${err}`);
+  }
+});
+app.get("/get/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const raw = fs.readFileSync("todos.json");
+    const exist = JSON.parse(raw);
+    for (let i = 0; i < exist.length; i++) {
+      if (id === exist[i].id) {
+        res.status(200).send(exist[i]);
+      }
+    }
+    res.status(404).send("Not Found");
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+app.put("/edit/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const {title,description}=req.body;
+    const raw = fs.readFileSync("todos.json");
+    const exist = JSON.parse(raw);
+    for (let i = 0; i < exist.length; i++) {
+      if (id === exist[i].id) {
+        if(title){
+          exist[i].title=title;
+        }
+        if(description){
+          exist[i].description=description;
+        }
+        fs.writeFileSync("todos.json", JSON.stringify(exist));
+        res.status(200).send(exist[i]);
+        return;
+      }
+    }
+    res.status(404).send("Not Found");
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+app.delete("/delete/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const raw = fs.readFileSync("todos.json");
+    const exist = JSON.parse(raw);
+    for (let i = 0; i < exist.length; i++) {
+      if (id === exist[i].id) {
+        exist.splice(i, 1);
+        fs.writeFileSync("todos.json", JSON.stringify(exist));
+        res.status(200).send("deleted successfully");
+        return;
+      }
+    }
+    res.status(404).send("Not Found");
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.listen(Port, () => {
+  console.log(`Server is running on port ${Port}`);
+});
+
+module.exports = app;
